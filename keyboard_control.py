@@ -7,6 +7,8 @@ drone = tello.Tello()
 drone.connect()
 print(drone.get_battery())
 
+global img
+
 drone.streamon()
 
 def get_keyboard_press():
@@ -42,6 +44,10 @@ def get_keyboard_press():
 
     if kp.get_key("a"):
         yv = -speed
+
+    if kp.get_key("z"):
+        cv2.imwrite(f'assets/images/pic_{time.time()}.jpg', img)
+        time.sleep(0.3)
 
     if (kp.get_key("p")):
         lr = 0
