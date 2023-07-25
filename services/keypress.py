@@ -19,7 +19,7 @@ def get_key(key_name):
     pygame.display.update()
     return ans
 
-def get_keyboard_press(drone):
+def get_keyboard_press(drone, img):
     lr, fb, ud, yv = 0, 0, 0, 0
     speed = 40
 
@@ -48,10 +48,10 @@ def get_keyboard_press(drone):
         ud = -speed
 
     if get_key("d"):
-        yv = speed
+        yv = speed + 15
 
     if get_key("a"):
-        yv = -speed
+        yv = -speed - 15
 
     if get_key("z"):
         cv2.imwrite(f'assets/images/pic_{time.time()}.jpg', img)
