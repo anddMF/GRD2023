@@ -12,7 +12,7 @@ print(drone.get_battery())
 drone.takeoff()
 
 w, h = 640, 360
-fbRange = [7200, 7600]
+fbRange = [800, 1200]
 pid = [0.4, 0.4, 0]
 pError = 0
 
