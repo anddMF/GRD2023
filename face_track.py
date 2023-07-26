@@ -12,7 +12,8 @@ print(drone.get_battery())
 drone.takeoff()
 
 w, h = 640, 360
-fbRange = [800, 1200]
+fbRange = [800, 1300]
+udRange = [160, 180]
 pid = [0.4, 0.4, 0]
 pError = 0
 
@@ -24,7 +25,7 @@ def findFace(img):
     faceCascade = cv2.CascadeClassifier(
         "assets/code/haarcascade_eye.xml")
     imgGray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    faces = faceCascade.detectMultiScale(imgGray, 1.1, 8)
+    faces = faceCascade.detectMultiScale(imgGray, 1.2, 8)
 
     myFaceListCenter = []
     myFaceListArea = []
@@ -50,7 +51,7 @@ def trackFace(drone, info, w, pid, pError):
     area = info[1]
     x,y = info[0]
     fb = 0
-
+    ud = 0
     error = x - w // 2
     speed = pid[0] * error + pid[1] * (error - pError)
     speed = int(np.clip(speed, -100, 100))
@@ -68,7 +69,17 @@ def trackFace(drone, info, w, pid, pError):
         speed = 0
         error = 0
 
-    drone.send_rc_control(0, fb, 0, speed)
+    # y 170
+    print("ALTURA", y)
+
+    if y > udRange[0] and y < udRange[1]:
+        ud = 0
+    elif y > udRange[1]:
+        ud = -20
+    elif y < udRange[0] and ud != 0:
+        ud = 20
+    
+    drone.send_rc_control(0, fb, ud, speed)
     return error
 
 
