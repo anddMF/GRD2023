@@ -2,6 +2,9 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,visualstudiocode
 
 assets/images/*
+yolo-Weights/
+yolov5s.pt
+
 ### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/
