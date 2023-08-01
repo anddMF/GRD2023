@@ -2,7 +2,6 @@ import cv2
 import numpy as np
 from djitellopy import tello
 import services.keypress as kp
-import cv2
 import time
 
 drone = tello.Tello()
