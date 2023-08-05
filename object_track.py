@@ -11,8 +11,8 @@ drone.connect()
 print(drone.get_battery())
 
 w, h = 640, 480
-fbSizeRange = [6000, 7000]
-udSizeRange = [160, 180]
+fbSizeRange = [11000, 13000]
+udPositionRange = [160, 180]
 pid = [0.4, 0.4, 0]
 pError = 0
 
@@ -57,9 +57,9 @@ def trackObject(drone, info, w, pid, pError):
     if area > fbSizeRange[0] and area < fbSizeRange[1]:
         fb = 0
     elif area > fbSizeRange[1]:
-        fb = -20
+        fb = -10
     elif area < fbSizeRange[0] and area != 0:
-        fb = 20
+        fb = 10
 
     if x == 0:
         speed = 0
@@ -68,19 +68,22 @@ def trackObject(drone, info, w, pid, pError):
     # y 170
     print("ALTURA", y)
 
-    if y > udSizeRange[0] and y < udSizeRange[1]:
+    if y > udPositionRange[0] and y < udPositionRange[1]:
         ud = 0
-    elif y > udSizeRange[1]:
-        ud = -20
-    elif y < udSizeRange[0] and ud != 0:
-        ud = 20
-
-    drone.send_rc_control(0, fb, ud, speed)
+    elif y > udPositionRange[1]:
+        ud = -30
+    elif y < udPositionRange[0] and ud != 0:
+        ud = 30
+        
+    print("COMANDOS: FB ", fb, "UD ", ud, "SPEED ", speed)
+    # TODO: add speed again, but its not working 
+    drone.send_rc_control(0, fb, ud, 0)
+    
     return error
 
 
 while True:
-    sucess, img = drone.get_frame_read().frame
+    img = drone.get_frame_read().frame
     # success, img = cap.read()
     
     results = model(img, stream=True)
@@ -124,10 +127,12 @@ while True:
                 # send coord to drone
                 pError = trackObject(drone, detectedInfo, w, pid, pError)
 
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    img = cv2.resize(img, (w, h))
     cv2.imshow('Webcam', img)
     if cv2.waitKey(1) == ord('q'):
         drone.land()
         break
 
-cap.release()
+# cap.release()
 cv2.destroyAllWindows()
